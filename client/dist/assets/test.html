@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Model Viewer mit Hotspot-Details</title>
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: sans-serif;
+        }
+
+        model-viewer {
+            width: 100%;
+            height: 100vh;
+        }
+
+        .hotspot {
+            background: white;
+            border-radius: 8px;
+            padding: 6px 10px;
+            border: 1px solid black;
+            font-size: 12px;
+            max-width: 200px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .hotspot-title {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .hotspot-description {
+            font-size: 11px;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <model-viewer id="viewer" src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" camera-controls
+        auto-rotate ar exposure="1"></model-viewer>
+
+    <script type="module">
+        const viewer = document.querySelector("#viewer");
+
+        viewer.addEventListener("click", async (event) => {
+            const hit = await viewer.positionAndNormalFromPoint(
+                event.clientX,
+                event.clientY
+            );
+
+            if (!hit) return;
+
+            // Prompt user for input
+            const title = prompt("Titel für Hotspot:");
+            if (!title) return;
+
+            const description = prompt("Beschreibung:");
+            if (description === null) return;
+
+            const posArray = [
+                hit.position.x.toFixed(4),
+                hit.position.y.toFixed(4),
+                hit.position.z.toFixed(4),
+            ];
+            const normArray = [
+                hit.normal.x.toFixed(4),
+                hit.normal.y.toFixed(4),
+                hit.normal.z.toFixed(4),
+            ];
+
+            const id = `hotspot-${Date.now()}`;
+
+            const container = document.createElement("div");
+            container.className = "hotspot";
+            container.slot = id;
+
+            const titleEl = document.createElement("div");
+            titleEl.className = "hotspot-title";
+            titleEl.innerText = title;
+
+            const descEl = document.createElement("div");
+            descEl.className = "hotspot-description";
+            descEl.innerText = description;
+
+            container.appendChild(titleEl);
+            container.appendChild(descEl);
+
+            container.setAttribute("data-position", posArray.join(" "));
+            container.setAttribute("data-normal", normArray.join(" "));
+
+            viewer.appendChild(container);
+        });
+    </script>
+</body>
+
+</html>
