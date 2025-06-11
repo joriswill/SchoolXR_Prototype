@@ -25,7 +25,7 @@
 ### 1. Repository klonen
 
 ```bash
-git clone <REPO_URL>
+git clone https://github.com/L4223/SchoolXR_Prototype.git
 cd SchoolXR
 ```
 
