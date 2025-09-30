@@ -33,6 +33,8 @@ services:
     build: ./client
     container_name: schoolxr-client
     restart: unless-stopped
+    environment:
+      VITE_SKETCHFAB_API_KEY: dein_neuer_api_key
     ports:
       - "80:80"
 
