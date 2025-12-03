@@ -5,7 +5,8 @@ import { HiUpload } from "react-icons/hi";
 import UploadModal from "./UploadModal"; // Stelle sicher, dass der Pfad stimmt!
 import SearchBar from "./SearchBar"; // Make sure this import path is correct
 
-const SKETCHFAB_API_KEY = import.meta.env.VITE_SKETCHFAB_API_KEY;
+// Use the server-side proxy for Sketchfab calls to avoid exposing API keys in the client
+const SKETCHFAB_PROXY_BASE = '/api/sketchfab';
 const PAGE_SIZE = 24;
 
 const SketchfabLibrary = ({ onModelSelect }) => {
@@ -21,13 +22,8 @@ const SketchfabLibrary = ({ onModelSelect }) => {
     if (formatsMap[uid]) return formatsMap[uid];
 
     try {
-      const res = await fetch(
-        `https://api.sketchfab.com/v3/models/${uid}/download`,
-        {
-          headers: { Authorization: `Token ${SKETCHFAB_API_KEY}` },
-        }
-      );
-
+      // Request the server proxy which will call Sketchfab with server-side token
+      const res = await fetch(`${SKETCHFAB_PROXY_BASE}/models/${uid}/download`);
       if (!res.ok) return {};
       const data = await res.json();
 
@@ -46,20 +42,15 @@ const SketchfabLibrary = ({ onModelSelect }) => {
   };
 
   const searchSketchfab = async (reset = false) => {
-    const endpoint = reset
-      ? `https://api.sketchfab.com/v3/search?type=models&q=${encodeURIComponent(
-          query
-        )}&downloadable=true&count=${PAGE_SIZE}`
+    const url = reset
+      ? `${SKETCHFAB_PROXY_BASE}/search?q=${encodeURIComponent(query)}&count=${PAGE_SIZE}`
       : nextUrl;
 
-    if (!endpoint) return;
+    if (!url) return;
 
     setLoading(true);
     try {
-      const res = await fetch(endpoint, {
-        headers: { Authorization: `Token ${SKETCHFAB_API_KEY}` },
-      });
-
+      const res = await fetch(url);
       const data = await res.json();
       const newModels = data.results || [];
 
