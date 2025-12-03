@@ -179,7 +179,7 @@ const SketchfabLibrary = ({ onModelSelect }) => {
             className="hover:shadow-lg transition-all duration-200"
           >
             <div>
-              <h5 className="text-md font-semibold tracking-tight text-gray-200 truncate">
+              <h5 className="text-md font-semibold tracking-tight text-gray-800 dark:text-gray-200 truncate">
                 {model.name}
               </h5>
               <p className="text-sm text-gray-500">
@@ -198,7 +198,7 @@ const SketchfabLibrary = ({ onModelSelect }) => {
                 href={`https://sketchfab.com/models/${model.uid}/embed`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm text-blue-800 hover:underline"
+                className="text-sm text-blue-800 dark:text-blue-400 hover:underline"
               >
                 Vorschau auf Sketchfab
               </a>

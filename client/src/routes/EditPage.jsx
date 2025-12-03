@@ -329,7 +329,7 @@ function EditPage() {
         <ModalBody>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-white mb-1">
+              <label className="block text-sm font-medium text-black dark:text-white mb-1">
                 Titel
               </label>
               <TextInput
@@ -340,7 +340,7 @@ function EditPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-white mb-1">
+              <label className="block text-sm font-medium text-black dark:text-white mb-1">
                 Beschreibung
               </label>
               <Textarea
@@ -351,7 +351,7 @@ function EditPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-white mb-1">
+              <label className="block text-sm font-medium text-black dark:text-white mb-1">
                 Aufgabe
               </label>
               <Textarea

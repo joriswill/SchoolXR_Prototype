@@ -212,12 +212,12 @@ function FinalPage() {
         >
           <ModalHeader>✅ Alle Aufgaben erledigt!</ModalHeader>
           <ModalBody>
-            <p className="text-sm text-white">
+            <p className="text-sm text-black dark:text-white">
               Du hast alle Hotspots erfolgreich bearbeitet und die Aufgaben
               abgeschlossen. Gut gemacht! 👍
             </p>
             <br />
-            <p className="text-sm text-white">
+            <p className="text-sm text-black dark:text-white">
               Du kannst jetzt die Anwendung beenden oder das Modell weiter
               erkunden.
             </p>
