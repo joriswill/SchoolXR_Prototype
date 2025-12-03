@@ -158,7 +158,8 @@ function EditPage() {
     if (!pendingHotspot || !title) return;
 
     const updatedHotspot = {
-      modelId,
+      // store the full model URL when available (keeps remote Sketchfab URLs)
+      modelId: modelUrl?.glb || modelUrl?.gltf || defaultModel.glb,
       title,
       description,
       task,
