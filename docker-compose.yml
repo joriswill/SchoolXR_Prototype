@@ -1,16 +1,14 @@
-version: "3.8"
-
 services:
   mongo:
     image: mongo:6
     container_name: schoolxr-mongo
     restart: unless-stopped
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-      MONGO_INITDB_DATABASE: schoolxr
-    ports:
-      - "27017:27017"
+      # These must be provided at runtime (do NOT commit real values to the repo).
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE:-schoolxr}
+    # NOTE: no ports mapped → Mongo is only reachable from other containers on the compose network
     volumes:
       - mongo_data:/data/db
 
@@ -18,25 +16,28 @@ services:
     build: ./server
     container_name: schoolxr-server
     restart: unless-stopped
-    env_file:
-      - ./server/.env
     environment:
-      MONGODB_URI: mongodb://root:example@mongo:27017/schoolxr?authSource=admin
-      MODE: dev
-      PORT: 3001
+      # Server reads MONGODB_URI from env. It is constructed here using the mongo root creds.
+      MONGODB_URI: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/${MONGO_INITDB_DATABASE:-schoolxr}?authSource=admin"
+      MODE: ${MODE:-dev}
+      PORT: ${PORT:-3001}
+      # Do NOT store secrets in this file. Provide SKETCHFAB_TOKEN / LTI_KEY via runtime env or secrets management.
+      SKETCHFAB_TOKEN: ${SKETCHFAB_TOKEN}
+      LTI_KEY: ${LTI_KEY}
     ports:
       - "3001:3001"
     depends_on:
       - mongo
 
   client:
-    build: ./client
+    build:
+      context: ./client
     container_name: schoolxr-client
     restart: unless-stopped
-    environment:
-      VITE_SKETCHFAB_API_KEY: dein_neuer_api_key
     ports:
       - "80:80"
+    depends_on:
+      - server
 
 volumes:
   mongo_data:
