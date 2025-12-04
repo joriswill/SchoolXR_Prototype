@@ -73,7 +73,8 @@ const SketchfabLibrary = ({ onModelSelect }) => {
     if (!formats) return;
 
     if (formats.glb) {
-      onModelSelect({ glb: formats.glb, usdz: formats.usdz });
+      // include the original Sketchfab UID so the app can store a stable id
+      onModelSelect({ glb: formats.glb, usdz: formats.usdz, sketchfabUid: model.uid });
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else if (formats.gltf || formats.zip) {
       try {
@@ -104,7 +105,7 @@ const SketchfabLibrary = ({ onModelSelect }) => {
         });
         const newGltfUrl = URL.createObjectURL(newGltfBlob);
 
-        onModelSelect({ gltf: newGltfUrl, glb: null, usdz: null });
+        onModelSelect({ gltf: newGltfUrl, glb: null, usdz: null, sketchfabUid: model.uid });
       } catch (e) {
         alert("Fehler beim Entpacken der ZIP: " + e.message);
       }
