@@ -76,6 +76,22 @@ router.get("/collections/model/:modelId", async (req, res) => {
 	}
 });
 
+// DELETE: remove all annotations for a collection for current user
+router.delete("/collection/:collectionName", async (req, res) => {
+	const userId = res.locals.token?.user || "testUser";
+	const { collectionName } = req.params;
+
+	if (!collectionName)
+		return res.status(400).json({ error: "Missing collectionName" });
+
+	try {
+		const result = await Annotation.deleteMany({ userId, collectionName });
+		res.json({ deletedCount: result.deletedCount || 0 });
+	} catch (err) {
+		console.error("❌ Fehler beim Löschen der Collection:", err);
+		res.status(500).json({ error: "Fehler beim Löschen der Collection" });
+	}
+});
 // 🔹 GET: Alle Annotationen für ein Modell und Nutzer (fallback oder legacy)
 router.get("/:modelId", async (req, res) => {
 	const { modelId } = req.params;
